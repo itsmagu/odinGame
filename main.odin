@@ -23,8 +23,6 @@ main :: proc() {
 	defer SDL.DestroyRenderer(rdr_ptr)
 	
 	//State Decleration
-	running := true
-	pause := false
 	nextFrame : u64 = GetRealtimeCount()
 	nextSecond := nextFrame
 	tickFreq := GetRealtimeFreq()
@@ -35,27 +33,16 @@ main :: proc() {
 	delayCount := 0
 
 	// Program Loop
-	mainloop : for running {
+	mainloop : for {
 		// EventLoop
 		for e:SDL.Event;SDL.PollEvent(&e);{
 			#partial switch e.type {
 			case SDL.EventType.QUIT: break mainloop
-			case SDL.EventType.WINDOWEVENT:
-				#partial switch e.window.event {
-				case SDL.WindowEventID.FOCUS_LOST:
-					pause = true
-					SDL.SetWindowTitle(win_ptr,"Paused")
-				case SDL.WindowEventID.FOCUS_GAINED:
-					pause = false
-					nextFrame = GetRealtimeCount()
-				}
-			}
 		}
 
 		// MainLoop
 		if !pause && GetRealtimeCount() >= nextFrame {
 			frameSkips : u64
-			assert(frameSkips == 0)
 
 			for firstRun := true; firstRun || (GetRealtimeCount() >= nextFrame && frameSkips < 5); firstRun = false {
 				frameSkips += 1
