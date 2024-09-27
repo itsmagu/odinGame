@@ -38,10 +38,11 @@ main :: proc() {
 		for e:SDL.Event;SDL.PollEvent(&e);{
 			#partial switch e.type {
 			case SDL.EventType.QUIT: break mainloop
+			}
 		}
 
 		// MainLoop
-		if !pause && GetRealtimeCount() >= nextFrame {
+		if GetRealtimeCount() >= nextFrame {
 			frameSkips : u64
 
 			for firstRun := true; firstRun || (GetRealtimeCount() >= nextFrame && frameSkips < 5); firstRun = false {
