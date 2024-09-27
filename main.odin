@@ -12,13 +12,17 @@ main :: proc() {
 	// SDL Init
 	SDL.Init(SDL.INIT_EVERYTHING)
 	defer SDL.Quit()
+
+	// Window
 	win_ptr := SDL.CreateWindow("",
 		SDL.WINDOWPOS_CENTERED,
 		SDL.WINDOWPOS_CENTERED,
 		600,400,
-		transmute(SDL.WindowFlags)cast(u32)0
+		transmute(SDL.WindowFlags)u32(0)
 	)
 	defer SDL.DestroyWindow(win_ptr)
+
+	// Renderer
 	rdr_ptr := SDL.CreateRenderer(win_ptr,-1,SDL.RENDERER_ACCELERATED)
 	defer SDL.DestroyRenderer(rdr_ptr)
 	
@@ -26,6 +30,7 @@ main :: proc() {
 	nextFrame : u64 = GetRealtimeCount()
 	nextSecond := nextFrame
 	tickFreq := GetRealtimeFreq()
+	fmt.println(tickFreq)
 	fps_limit := tickFreq / 60
 	fps : u32
 	box := SDL.Rect{0,0,2,400}
@@ -64,9 +69,9 @@ main :: proc() {
 			}
 
 			{ using SDL
-				SetRenderDrawColor(rdr_ptr,0x08,0x08,0x16,0xFF)
+				SetRenderDrawColor(rdr_ptr,0x00,0x00,0x00,0xFF)
 				RenderClear(rdr_ptr)
-				SetRenderDrawColor(rdr_ptr,0xFF,0x00,0x22,0xFF)
+				SetRenderDrawColor(rdr_ptr,0xFF,0x00,0x00,0xFF)
 				RenderFillRect(rdr_ptr,&box)
 				RenderPresent(rdr_ptr)
 			}
